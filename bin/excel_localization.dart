@@ -41,16 +41,25 @@ List<int> createKeysRow(List<Data> firstRow, Excel excel) {
   final newValues = <String>[];
   for (var cell in firstRow) {
     var key = cell.value.toString().trim();
-    key = camelCase(key);
-    final regex =
-        r'[^\p{Alphabetic}\p{Mark}\p{Decimal_Number}\p{Connector_Punctuation}\p{Join_Control}\s]+';
-    key = key.replaceAll(RegExp(regex, unicode: true), '');
+    key = formatKeyText(key);
     newValues.add(key);
   }
+  appendKeys(excel, newValues);
+  final fileBytes = excel.save();
+  return fileBytes;
+}
+
+void appendKeys(Excel excel, List<String> newValues) {
   excel.sheets.entries.first.value.insertRow(0);
   excel.sheets.entries.first.value.insertRowIterables(newValues, 0);
-  var fileBytes = excel.save();
-  return fileBytes;
+}
+
+String formatKeyText(String key) {
+  key = camelCase(key);
+  final regex =
+      r'[^\p{Alphabetic}\p{Mark}\p{Decimal_Number}\p{Connector_Punctuation}\p{Join_Control}\s]+';
+  key = key.replaceAll(RegExp(regex, unicode: true), '');
+  return key;
 }
 
 List<Data> getFirstRow(Sheet sheet) {
