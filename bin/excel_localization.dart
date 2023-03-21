@@ -3,9 +3,11 @@ import 'package:excel/excel.dart';
 import 'package:quartet/quartet.dart';
 
 void main(List<String> arguments) async {
-  var filePath = 'excel/Book1.xlsx';
-  var bytes = File(filePath).readAsBytesSync();
-  var excel = Excel.decodeBytes(bytes);
+  const filePathInput = 'excel/input.xlsx';
+  const filePathOutput = 'excel/output.xlsx';
+  const fileKeysPath = 'excel/keys.text';
+  final bytes = File(filePathInput).readAsBytesSync();
+  final excel = Excel.decodeBytes(bytes);
 
   for (var table in excel.tables.entries) {
     final sheet = table.value;
@@ -25,7 +27,16 @@ void main(List<String> arguments) async {
     excel.sheets.entries.first.value.insertRowIterables(newValues, 0);
   }
   var fileBytes = excel.save();
-  File(filePath)
+  File(filePathOutput)
     ..createSync(recursive: true)
     ..writeAsBytesSync(fileBytes);
+  var keys = '';
+  for (final e in excel.sheets.entries.first.value.rows.first
+      .map((e) => e.value)
+      .toSet()) {
+    keys += 'const $e = "$e";' '\n';
+  }
+  File(fileKeysPath)
+    ..createSync(recursive: true)
+    ..writeAsString(keys);
 }
