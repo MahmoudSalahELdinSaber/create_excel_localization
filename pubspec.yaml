@@ -1,0 +1,19 @@
+name: excel_localization
+description: A sample command-line application.
+version: 1.0.0
+# repository: https://github.com/my_org/my_repo
+
+environment:
+  sdk: '>=2.7.0 <3.0.0'
+
+dependencies:
+  excel: ^2.0.4
+  path: ^1.8.3
+  quartet: ^0.1.1
+  path_provider: ^2.0.14
+  excel_to_json: ^1.1.0
+
+dev_dependencies:
+  lints: ^2.0.0
+  # excel: ^2.0.4
+  test: ^1.21.0
